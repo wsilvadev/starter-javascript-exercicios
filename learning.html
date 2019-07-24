@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>first</title>
+</head>
+<body>
+    <input type="text" name="user"> 
+    
+    <button onclick="list()">Adicionar</button>
+
+    <ul></ul>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+    var listElement = document.querySelector('ul');
+    var inputElement = document.querySelector('input');
+
+        function repositories(Repositories){
+            listElement.innerHTML = "";
+        
+            for(repo of Repositories){
+            const textElement = document.createTextNode(repo.name);
+            const liElement = document.createElement('li');
+
+            liElement.appendChild(textElement);
+            listElement.appendChild(liElement);
+
+        }
+    }
+        function renderLoading(loading){
+            listElement.innerHTML = "";
+
+            var loadElement = document.createTextNode('Carregando ...');
+            var loadingElement = document.createElement('li');
+
+            loadingElement.appendChild(loadElement);
+            listElement.appendChild(loadingElement);
+
+        }
+        function renderErro(loading){
+            listElement.innerHTML = "";
+
+            var textElement = document.createTextNode("error");
+            var erroElement = document.createElement('li');
+
+            erroElement.style.color = "#F00";
+
+            erroElement.appendChild(textElement);
+            listElement.appendChild(erroElement);
+
+        }
+        function list(){
+            var user = inputElement.value;
+
+            if(!user) return;
+
+            renderLoading();
+
+            
+            axios.get('https://api.github.com/users/' + user + '/repos')
+            
+            .then( function(response) {
+                repositories( response.data );
+            })
+            .catch(function(){
+                renderErro();
+            });
+        }
+        
+    </script>
+</body>
+</html>
+
